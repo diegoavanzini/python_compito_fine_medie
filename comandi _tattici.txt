@@ -1,0 +1,14 @@
+xgettext -d main -o locale/main.pot main.py
+
+msginit -l it -i locale/main.pot -o locale/it/LC_MESSAGES/main.po
+msginit -l es -i locale/main.pot -o locale/es/LC_MESSAGES/main.po
+msginit -l en -i locale/main.pot -o locale/en/LC_MESSAGES/main.po
+
+
+msgfmt locale/it/LC_MESSAGES/main.po -o locale/it/LC_MESSAGES/main.mo 
+msgfmt locale/es/LC_MESSAGES/main.po -o locale/es/LC_MESSAGES/main.mo 
+msgfmt locale/en/LC_MESSAGES/main.po -o locale/en/LC_MESSAGES/main.mo 
+
+python main.py -l it
+python main.py -l en
+python main.py -l es
