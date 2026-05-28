@@ -16,6 +16,12 @@ def home():
 def compiti(): 
     return get_compiti()
 
+
+@app .route("/scadenze" , methods=["GET"]) 
+def scadenze():
+    id_materia = request.args.get("id_materia")
+    return get_data_scadenza(id_materia)
+
 @app .route("/delete" , methods=["POST"])
 def delete():
     if request.method == "POST"  :
@@ -37,4 +43,4 @@ def  AddCompito():
         return redirect("/")
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(debug=True)

@@ -119,18 +119,42 @@ def delete_compiti(id):
     connection.close()
     return 1
 
-def get_data_scadenza(id):
+def get_data_scadenza(materia):
+    result = []
     connection = sqlite3.connect("compiti.db")
     cursor = connection.cursor()
     cursor.row_factory = sqlite3.Row
+    # Data corrente e numero del giorno della settimana (lunedi=1 ... domenica=7)
     oggi = datetime.datetime.now() 
-    numero_giorno = oggi.weekday() + 1 
-    cursor.execute("""SELECT id_week_day FROM subjects_days as sd INNER JOIN school_subjects as ss ON ss.id = sd.id_subject 
-WHERE subject = ? AND id_week_day > ? ORDER by id_week_day ASC""", (id, numero_giorno))
-    row = cursor.fetchone()
+    numero_giorno_oggi = oggi.weekday() + 1 
+    # Recupera tutti i giorni in cui e prevista la materia, ordinati cronologicamente
+    cursor.execute("""SELECT id_week_day 
+                   FROM subjects_days as sd 
+                   INNER JOIN school_subjects as ss 
+                   ON ss.id = sd.id_subject 
+                   WHERE subject = ? ORDER by id_week_day ASC""", (materia,))
+    rows = cursor.fetchall()
     connection.close()
-    if row is None:  # or just "if row"
-        return None
-    numero_giorno_materia = row[0]
-    delta_giorni = numero_giorno_materia - numero_giorno
-    return oggi + datetime.timedelta(days = delta_giorni)
+    if not rows:  # or just "if row"
+        return result
+
+    # Converte le righe del DB in una lista semplice di interi (giorni settimana)
+    week_days = []
+    for r in rows:
+         week_days.append(r[0])
+
+    # Cerca le prossime 2 date utili per la materia
+    for d in week_days:
+        if len(result) >= 2:
+            break
+        if d > numero_giorno_oggi + 2:
+            # Giorno sufficientemente nel futuro: calcola direttamente la prossima data
+            next_day = d
+            delta_giorni = next_day - numero_giorno_oggi
+            result.append(oggi + datetime.timedelta(days = delta_giorni))
+        else:
+            # Giorno gia passato o troppo vicino: lo sposta alla settimana successiva
+            giorno_posticipato = d + 7
+            week_days.append(giorno_posticipato)
+    
+    return result

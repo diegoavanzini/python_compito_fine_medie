@@ -77,7 +77,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-5">
-                                    <button type="submit" class="btn btn-primary">"Add"</button>
+                                    <button type="button" class="btn btn-primary" onclick="addTask()">Add</button>
                                 </div>
                             </div>
                         </form>
@@ -189,7 +189,135 @@
         <p>Note that we start the search in tbody, to prevent filtering the table headers.</p>
     </div>
 
+    <div class="modal fade" id="scadenzeModal" tabindex="-1" role="dialog" aria-labelledby="scadenzeModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="scadenzeModalLabel">Scelta scadenza</h4>
+                </div>
+                <div class="modal-body" id="scadenzeModalBody"></div>
+                <div class="modal-footer" id="scadenzeModalFooter"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        function showInfoModal(title, message) {
+            $('#scadenzeModalLabel').text(title);
+            $('#scadenzeModalBody').html('<p>' + message + '</p>');
+            $('#scadenzeModalFooter').html(
+                '<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>'
+            );
+            $('#scadenzeModal').modal('show');
+        }
+
+        function chooseScadenzaModal(scadenze) {
+            return new Promise(function (resolve) {
+                var settled = false;
+                var $modal = $('#scadenzeModal');
+
+                function safeResolve(value) {
+                    if (settled) {
+                        return;
+                    }
+                    settled = true;
+                    resolve(value);
+                }
+
+                function cleanup() {
+                    $modal.off('click', '.js-select-scadenza');
+                    $modal.off('click', '.js-cancel-scadenza');
+                    $modal.off('hidden.bs.modal.scadenza');
+                }
+
+                var optionsHtml = '<p>Seleziona una data di scadenza suggerita:</p><div class="list-group">';
+                for (var i = 0; i < scadenze.length; i++) {
+                    optionsHtml +=
+                        '<button type="button" class="list-group-item js-select-scadenza" data-date="' +
+                        scadenze[i] +
+                        '">' +
+                        scadenze[i] +
+                        '</button>';
+                }
+                optionsHtml += '</div>';
+
+                $('#scadenzeModalLabel').text('Scegli la scadenza');
+                $('#scadenzeModalBody').html(optionsHtml);
+                $('#scadenzeModalFooter').html(
+                    '<button type="button" class="btn btn-default js-cancel-scadenza">Annulla</button>'
+                );
+
+                $modal.on('click', '.js-select-scadenza', function () {
+                    var selectedDate = $(this).data('date');
+                    cleanup();
+                    safeResolve(selectedDate);
+                    $modal.modal('hide');
+                });
+
+                $modal.on('click', '.js-cancel-scadenza', function () {
+                    cleanup();
+                    safeResolve(null);
+                    $modal.modal('hide');
+                });
+
+                $modal.on('hidden.bs.modal.scadenza', function () {
+                    cleanup();
+                    safeResolve(null);
+                });
+
+                $modal.modal({
+                    backdrop: 'static',
+                    keyboard: true,
+                    show: true
+                });
+            });
+        }
+
+        async function addTask() {
+            const materiaSelect = document.getElementById('materia');
+            const scadenzaInput = document.getElementById('when');
+            const form = materiaSelect ? materiaSelect.closest('form') : null;
+
+            if (!materiaSelect || !scadenzaInput || !form) {
+                showInfoModal('Errore', 'Form non trovato. Ricarica la pagina e riprova.');
+                return;
+            }
+
+            const materia = materiaSelect.value;
+
+            try {
+                const response = await fetch('/scadenze?id_materia=' + encodeURIComponent(materia), {
+                    method: 'GET'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Impossibile recuperare le scadenze.');
+                }
+
+                const data = await response.json();
+                const scadenze = Array.isArray(data) ? data : [];
+
+                if (scadenze.length === 0) {
+                    showInfoModal('Nessuna scadenza', 'Non sono state trovate scadenze suggerite per questa materia.');
+                    return;
+                }
+
+                const scelta = await chooseScadenzaModal(scadenze.slice(0, 2));
+
+                if (!scelta) {
+                    return;
+                }
+
+                scadenzaInput.value = scelta;
+                form.submit();
+            } catch (error) {
+                showInfoModal('Errore', 'Errore durante il recupero delle scadenze: ' + error.message);
+            }
+        }
+
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
