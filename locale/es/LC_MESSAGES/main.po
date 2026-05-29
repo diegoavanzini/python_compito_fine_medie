@@ -52,3 +52,120 @@ msgstr ""
 #: main.py:45
 msgid "passiamo agli avvisi di oggi"
 msgstr ""
+
+msgid "My Homework List App"
+msgstr "Aplicacion de lista de tareas"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Welcome to My Homework List App!"
+msgstr "Bienvenido a mi aplicacion de lista de tareas"
+
+msgid "Add New Homeworks"
+msgstr "Agregar nuevas tareas"
+
+msgid "Homework Title"
+msgstr "Titulo de la tarea"
+
+msgid "This is some help text..."
+msgstr "Este es un texto de ayuda..."
+
+msgid "Description"
+msgstr "Descripcion"
+
+msgid "Enter the school subject."
+msgstr "Ingresa la materia escolar."
+
+msgid "Deadline"
+msgstr "Fecha limite"
+
+msgid "Add"
+msgstr "Agregar"
+
+msgid "Your Homeworks"
+msgstr "Tus tareas"
+
+msgid "No tasks"
+msgstr "Sin tareas"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Class timetable"
+msgstr "Horario de la clase"
+
+msgid "Search.."
+msgstr "Buscar.."
+
+msgid "Time"
+msgstr "Horario"
+
+msgid "Monday"
+msgstr "Lunes"
+
+msgid "Tuesday"
+msgstr "Martes"
+
+msgid "Wednesday"
+msgstr "Miercoles"
+
+msgid "Thursday"
+msgstr "Jueves"
+
+msgid "Friday"
+msgstr "Viernes"
+
+msgid "Italian"
+msgstr "Italiano"
+
+msgid "Math"
+msgstr "Matematicas"
+
+msgid "English"
+msgstr "Ingles"
+
+msgid "Spanish"
+msgstr "Espanol"
+
+msgid "P.E."
+msgstr "Ed. Fis."
+
+msgid "Note that we start the search in tbody, to prevent filtering the table headers."
+msgstr "Nota: empezamos la busqueda en tbody para no filtrar los encabezados de la tabla."
+
+msgid "Deadline selection"
+msgstr "Seleccion de fecha limite"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Select a suggested deadline:"
+msgstr "Selecciona una fecha limite sugerida:"
+
+msgid "Choose the deadline"
+msgstr "Elige la fecha limite"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Form not found. Reload the page and try again."
+msgstr "Formulario no encontrado. Recarga la pagina e intentalo de nuevo."
+
+msgid "Unable to fetch deadlines."
+msgstr "No se pudieron obtener las fechas limite."
+
+msgid "No deadline"
+msgstr "Sin fecha limite"
+
+msgid "No suggested deadlines were found for this subject."
+msgstr "No se encontraron fechas limite sugeridas para esta materia."
+
+msgid "Error while fetching deadlines: "
+msgstr "Error al obtener las fechas limite: "
+
+msgid "Are you sure you want to delete this task?"
+msgstr "Seguro que quieres eliminar esta tarea?"

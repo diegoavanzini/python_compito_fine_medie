@@ -32,19 +32,19 @@ def init_db():
     cursor.execute("SELECT COUNT(*) FROM school_subjects")
     if cursor.fetchone()[0] == 0:
         default_subjects = [
-            "Matematica",
-            "Italiano",
-            "Inglese",
-            "Storia",
-            "Geografia",
-            "Scienze",
-            "Educazione Fisica",
-            "Spagnolo",
-            "Arte",
-            "Musica",
-            "Religione",
-            "Tecnologia",
-            "Strumento"
+            "Math",
+            "Italian",
+            "English",
+            "History",
+            "Geography",
+            "Science",
+            "Physical Education",
+            "Spanish",
+            "Art",
+            "Music",
+            "Religion",
+            "Technology",
+            "Instrumental Music"
         ]
         for subject in default_subjects:
             cursor.execute(

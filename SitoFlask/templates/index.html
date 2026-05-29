@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ current_lang }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Homework List App</title>
+    <title>{{ _('My Homework List App') }}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -26,49 +26,62 @@
 
 <body>
     <div class="container">
+        <div class="text-right" style="margin-top: 15px;">
+            <span class="text-muted" style="margin-right: 8px;">{{ _('Language') }}:</span>
+            <a class="btn btn-default btn-xs" href="{{ url_for('home', lang='it') }}" title="Italiano">
+                <span class="glyphicon glyphicon-flag"></span> IT
+            </a>
+            <a class="btn btn-default btn-xs" href="{{ url_for('home', lang='en') }}" title="English">
+                <span class="glyphicon glyphicon-flag"></span> EN
+            </a>
+            <a class="btn btn-default btn-xs" href="{{ url_for('home', lang='es') }}" title="Espanol">
+                <span class="glyphicon glyphicon-flag"></span> ES
+            </a>
+        </div>
         <div class="text-center panel-body">
-            <h1>Welcome to My Homework List App!</h1>
+            <h1>{{ _('Welcome to My Homework List App!') }}</h1>
         </div>
         <div class="row">
             <div class="row panel-body col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapseAdd">AddNewHomeworks</a>
+                            <a data-toggle="collapse" href="#collapseAdd">{{ _('Add New Homeworks') }}</a>
                         </h4>
                     </div>
                     <div id="collapseAdd" class="panel-body">
                         <!-- Add this form below the task list in index.html -->
                         <form method="POST" class="form-horizontal" action="{{ url_for('compiti') }}">
+                            <input type="hidden" name="lang" value="{{ current_lang }}">
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="title" name="title"
-                                        placeholder="HomeworkTitle" required>
-                                    <span class="help-block">This is some help text...</span>
+                                        placeholder="{{ _('Homework Title') }}" required>
+                                    <span class="help-block">{{ _('This is some help text...') }}</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <textarea class="form-control" rows="5" id="description" name="description"
-                                        placeholder="Description" required></textarea>
-                                    <span class="help-block">This is some help text...</span>
+                                        placeholder="{{ _('Description') }}" required></textarea>
+                                    <span class="help-block">{{ _('This is some help text...') }}</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <select class="form-control" id="materia" name="materia">
                                         {% for school_subject in school_subjects %}
-                                        <option id="{{ school_subject.id }}">{{ school_subject.subject }}</option>
+                                        <option value="{{ school_subject.subject }}" id="{{ school_subject.id }}">{{ school_subject.subject }}</option>
                                         {% endfor %}
                                     </select>
-                                    <span class="help-block">Enter the school subject.</span>
+                                    <span class="help-block">{{ _('Enter the school subject.') }}</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class='col-sm-12'>
                                     <div class='input-group date' id='datetimepicker1'>
                                         <input type='text' class="form-control" id="when" name="scadenza"
-                                            placeholder="scadenza"/>
+                                            placeholder="{{ _('Deadline') }}"/>
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -77,7 +90,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-5">
-                                    <button type="button" class="btn btn-primary" onclick="addTask()">Add</button>
+                                    <button type="button" class="btn btn-primary" onclick="addTask()">{{ _('Add') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -90,7 +103,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapseList">YourHomeworks</a>
+                            <a data-toggle="collapse" href="#collapseList">{{ _('Your Homeworks') }}</a>
                         </h4>
                     </div>
                     <div id="collapseList">
@@ -99,7 +112,7 @@
                             {% if compiti|length == 0 %}
                             <div class="panel-body">
                                 <div class="col-sm-10">
-                                    NoTasks
+                                    {{ _('No tasks') }}
                                 </div>
                             </div>
 
@@ -107,6 +120,7 @@
                             {% for task in compiti %}
                             <form id="delete-form-{{ task.id }}" action="/delete" method="POST" style="display:none;">
                                 <input type="hidden" name="id_compiti" value="{{ task.id }}">
+                                <input type="hidden" name="lang" value="{{ current_lang }}">
                             </form>
                             <div class="panel-body">
                                 <div class="col-sm-10">
@@ -115,7 +129,7 @@
                                 </div>
                                 <div class="col-sm-offset-10">
                                     <button type="button" class="btn btn-danger"
-                                        onclick="deleteTask('{{ task.id }}')">Delete</button>
+                                        onclick="deleteTask('{{ task.id }}')">{{ _('Delete') }}</button>
                                 </div>
                             </div>
                             {% endfor %}
@@ -128,65 +142,73 @@
 
     </div>
     <div class="container">
-        <h2>Orario della classe</h2>
-        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+            <h2>{{ _('Class timetable') }}</h2>
+        <input class="form-control" id="myInput" type="text" placeholder="{{ _('Search..') }}">
         <br>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>orario</th>
-                    <th>Lunedì</th>
-                    <th>Martedì</th>
-                    <th>Mercoledì</th>
-                    <th>Giovedì</th>
-                    <th>Venerdì</th>
+                    <th>{{ _('Time') }}</th>
+                    <th>{{ _('Monday') }}</th>
+                    <th>{{ _('Tuesday') }}</th>
+                    <th>{{ _('Wednesday') }}</th>
+                    <th>{{ _('Thursday') }}</th>
+                    <th>{{ _('Friday') }}</th>
                 </tr>
             </thead>
             <tbody id="myTable">
                 <tr>
                     <td>8:00-9:oo</td>
-                    <td>Italiano</td>
-                    <td>Matematica</td>
-                    <td>Inglese</td>
-                    <td>Spagnolo</td>
-                    <td>Ed. Fis.</td>
+                    <td>{{ _('Math') }}</td>
+                    <td>{{ _('Technology') }}</td>
+                    <td>{{ _('Math') }}</td>
+                    <td>{{ _('P.E.') }}</td>
+                    <td>{{ _('Music') }}</td>
                 </tr>
                 <tr>
                     <td>9:oo-10:00</td>
-                    <td>Italiano</td>
-                    <td>Matematica</td>
-                    <td>Inglese</td>
-                    <td>Spagnolo</td>
-                    <td>Ed. Fis.</td>
+                    <td>{{ _('Art') }}</td>
+                    <td>{{ _('Technology') }}</td>
+                    <td>{{ _('Science') }}</td>
+                    <td>{{ _('P.E.') }}</td>
+                    <td>{{ _('Art') }}</td>
                 </tr>
                 <tr>
                     <td>10:00-11:00</td>
-                    <td>Italiano</td>
-                    <td>Matematica</td>
-                    <td>Inglese</td>
-                    <td>Spagnolo</td>
-                    <td>Ed. Fis.</td>
+                    <td>{{ _('Spanish') }}</td>
+                    <td>{{ _('English') }}</td>
+                    <td>{{ _('Spanish') }}</td>
+                    <td>{{ _('English') }}</td>
+                    <td>{{ _('Geography') }}</td>
                 </tr>
                 <tr>
                     <td>11:00-12:00</td>
-                    <td>Italiano</td>
-                    <td>Matematica</td>
-                    <td>Inglese</td>
-                    <td>Spagnolo</td>
-                    <td>Ed. Fis.</td>
+                    <td>{{ _('Italian') }}</td>
+                    <td>{{ _('Math') }}</td>
+                    <td>{{ _('Music') }}</td>
+                    <td>{{ _('Italian') }}</td>
+                    <td>{{ _('Math') }}</td>
                 </tr>
                 <tr>
                     <td>12:00-13:00</td>
-                    <td>Italiano</td>
-                    <td>Matematica</td>
-                    <td>Inglese</td>
-                    <td>Spagnolo</td>
-                    <td>Ed. Fis.</td>
+                    <td>{{ _('Italian') }}</td>
+                    <td>{{ _('Italian') }}</td>
+                    <td>{{ _('Religion') }}</td>
+                    <td>{{ _('Science') }}</td>
+                    <td>{{ _('English') }}</td>
+                </tr>
+                <tr>
+                    <td>13:00-13:45</td>
+                    <td>{{ _('History') }}</td>
+                    <td>{{ _('Italian') }}</td>
+                    <td>{{ _('Italian') }}</td>
+                    <td>{{ _('History') }}</td>
+                    <td>{{ _('Geography') }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <p>Note that we start the search in tbody, to prevent filtering the table headers.</p>
+        <p>{{ _('Note that we start the search in tbody, to prevent filtering the table headers.') }}</p>
     </div>
 
     <div class="modal fade" id="scadenzeModal" tabindex="-1" role="dialog" aria-labelledby="scadenzeModalLabel">
@@ -196,7 +218,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="scadenzeModalLabel">Scelta scadenza</h4>
+                    <h4 class="modal-title" id="scadenzeModalLabel">{{ _('Deadline selection') }}</h4>
                 </div>
                 <div class="modal-body" id="scadenzeModalBody"></div>
                 <div class="modal-footer" id="scadenzeModalFooter"></div>
@@ -209,7 +231,7 @@
             $('#scadenzeModalLabel').text(title);
             $('#scadenzeModalBody').html('<p>' + message + '</p>');
             $('#scadenzeModalFooter').html(
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>'
+                '<button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>'
             );
             $('#scadenzeModal').modal('show');
         }
@@ -233,7 +255,7 @@
                     $modal.off('hidden.bs.modal.scadenza');
                 }
 
-                var optionsHtml = '<p>Seleziona una data di scadenza suggerita:</p><div class="list-group">';
+                var optionsHtml = '<p>{{ _("Select a suggested deadline:") }}</p><div class="list-group">';
                 for (var i = 0; i < scadenze.length; i++) {
                     optionsHtml +=
                         '<button type="button" class="list-group-item js-select-scadenza" data-date="' +
@@ -244,10 +266,10 @@
                 }
                 optionsHtml += '</div>';
 
-                $('#scadenzeModalLabel').text('Scegli la scadenza');
+                $('#scadenzeModalLabel').text('{{ _("Choose the deadline") }}');
                 $('#scadenzeModalBody').html(optionsHtml);
                 $('#scadenzeModalFooter').html(
-                    '<button type="button" class="btn btn-default js-cancel-scadenza">Annulla</button>'
+                    '<button type="button" class="btn btn-default js-cancel-scadenza">{{ _("Cancel") }}</button>'
                 );
 
                 $modal.on('click', '.js-select-scadenza', function () {
@@ -282,26 +304,26 @@
             const form = materiaSelect ? materiaSelect.closest('form') : null;
 
             if (!materiaSelect || !scadenzaInput || !form) {
-                showInfoModal('Errore', 'Form non trovato. Ricarica la pagina e riprova.');
+                showInfoModal('{{ _("Error") }}', '{{ _("Form not found. Reload the page and try again.") }}');
                 return;
             }
 
             const materia = materiaSelect.value;
 
             try {
-                const response = await fetch('/scadenze?id_materia=' + encodeURIComponent(materia), {
+                const response = await fetch('/scadenze?id_materia=' + encodeURIComponent(materia) + '&lang={{ current_lang }}', {
                     method: 'GET'
                 });
 
                 if (!response.ok) {
-                    throw new Error('Impossibile recuperare le scadenze.');
+                    throw new Error('{{ _("Unable to fetch deadlines.") }}');
                 }
 
                 const data = await response.json();
                 const scadenze = Array.isArray(data) ? data : [];
 
                 if (scadenze.length === 0) {
-                    showInfoModal('Nessuna scadenza', 'Non sono state trovate scadenze suggerite per questa materia.');
+                    showInfoModal('{{ _("No deadline") }}', '{{ _("No suggested deadlines were found for this subject.") }}');
                     return;
                 }
 
@@ -314,7 +336,7 @@
                 scadenzaInput.value = scelta;
                 form.submit();
             } catch (error) {
-                showInfoModal('Errore', 'Errore durante il recupero delle scadenze: ' + error.message);
+                showInfoModal('{{ _("Error") }}', '{{ _("Error while fetching deadlines: ") }}' + error.message);
             }
         }
 
@@ -329,7 +351,7 @@
     </script>
     <script>
         function deleteTask(id) {
-            if (confirm('Are you sure you want to delete this task?')) {
+            if (confirm('{{ _("Are you sure you want to delete this task?") }}')) {
                 document.getElementById('delete-form-' + id).submit();
             }
         }

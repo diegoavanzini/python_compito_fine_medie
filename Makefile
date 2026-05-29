@@ -1,4 +1,4 @@
-.PHONY: run test clean
+.PHONY: run test clean compile_mo compile_mo_it compile_mo_en compile_mo_es
 
 run_it:
 	python main.py -l it
@@ -34,3 +34,14 @@ translate_es:
 	xgettext -d main -o locale/main.pot main.py
 # 	msginit -l es -i locale/main.pot -o locale/es/LC_MESSAGES/main.po
 	msgfmt locale/es/LC_MESSAGES/main.po -o locale/es/LC_MESSAGES/main.mo 
+
+compile_mo: compile_mo_it compile_mo_en compile_mo_es
+
+compile_mo_it:
+	msgfmt locale/it/LC_MESSAGES/main.po -o locale/it/LC_MESSAGES/main.mo
+
+compile_mo_en:
+	msgfmt locale/en/LC_MESSAGES/main.po -o locale/en/LC_MESSAGES/main.mo
+
+compile_mo_es:
+	msgfmt locale/es/LC_MESSAGES/main.po -o locale/es/LC_MESSAGES/main.mo
