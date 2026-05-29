@@ -67,13 +67,13 @@ def init_db():
         # List of (week_day_id, subject_id) tuples
         # week_day_id: 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday, 7=Sunday
         # subject_id: corresponds to ID in school_subjects table
-        subjects_days = [
-            (1, 9), (1, 1), (1, 8), (1, 2), (1, 4),
-            (2, 12), (2, 3), (2, 2), (2, 1),
+        subjects_days = ['''
+            (1, 9), (1, 1), (1, 8), (1, 2), (1, 4)
+            (2, 12), (2, 3), (2, 2), (2, 1)
             (3, 1), (3, 6), (3, 8), (3, 10), (3, 11), (3, 2),
             (4, 7), (4, 3), (4, 2), (4, 6), (4, 4),
             (5, 10),(5, 9), (5, 5), (5, 1), (5, 3)
-        ]
+        ''']
         for week_day_id, subject_id in subjects_days:
             cursor.execute(
                 "INSERT INTO subjects_days (id_week_day, id_subject, creation_date) VALUES (?, ?, ?)",
@@ -119,42 +119,3 @@ def delete_compiti(id):
     connection.close()
     return 1
 
-def get_data_scadenza(materia):
-    result = []
-    connection = sqlite3.connect("compiti.db")
-    cursor = connection.cursor()
-    cursor.row_factory = sqlite3.Row
-    # Data corrente e numero del giorno della settimana (lunedi=1 ... domenica=7)
-    oggi = datetime.datetime.now() 
-    numero_giorno_oggi = oggi.weekday() + 1 
-    # Recupera tutti i giorni in cui e prevista la materia, ordinati cronologicamente
-    cursor.execute("""SELECT id_week_day 
-                   FROM subjects_days as sd 
-                   INNER JOIN school_subjects as ss 
-                   ON ss.id = sd.id_subject 
-                   WHERE subject = ? ORDER by id_week_day ASC""", (materia,))
-    rows = cursor.fetchall()
-    connection.close()
-    if not rows:  # or just "if row"
-        return result
-
-    # Converte le righe del DB in una lista semplice di interi (giorni settimana)
-    week_days = []
-    for r in rows:
-         week_days.append(r[0])
-
-    # Cerca le prossime 2 date utili per la materia
-    for d in week_days:
-        if len(result) >= 2:
-            break
-        if d > numero_giorno_oggi + 2:
-            # Giorno sufficientemente nel futuro: calcola direttamente la prossima data
-            next_day = d
-            delta_giorni = next_day - numero_giorno_oggi
-            result.append(oggi + datetime.timedelta(days = delta_giorni))
-        else:
-            # Giorno gia passato o troppo vicino: lo sposta alla settimana successiva
-            giorno_posticipato = d + 7
-            week_days.append(giorno_posticipato)
-    
-    return result

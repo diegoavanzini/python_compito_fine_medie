@@ -56,11 +56,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <select class="form-control" id="materia" name="materia">
-                                        {% for school_subject in school_subjects %}
-                                        <option id="{{ school_subject.id }}">{{ school_subject.subject }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    <input type="text" class="form-control" id="materia" name="materia"
+                                        placeholder="materia">
                                     <span class="help-block">Enter the school subject.</span>
                                 </div>
                             </div>
@@ -68,7 +65,7 @@
                                 <div class='col-sm-12'>
                                     <div class='input-group date' id='datetimepicker1'>
                                         <input type='text' class="form-control" id="when" name="scadenza"
-                                            placeholder="scadenza"/>
+                                            placeholder="scadenza" required />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>

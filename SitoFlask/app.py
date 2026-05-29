@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from DB_Operations import init_db, add_compiti, get_compiti, delete_compiti, get_school_subjects, get_data_scadenza
+from DB_Operations import init_db, add_compiti, get_compiti, delete_compiti, get_school_subjects
 
 app = Flask(__name__)
 
@@ -30,17 +30,15 @@ def delete():
         return redirect("/") 
 
 @app.route("/compiti", methods=["POST"]) 
-def  AddCompito(): 
+def  AddText(): 
     if request.method == "POST" : 
         title = request.form["title"] 
         description = request.form["description"]
-        id_materia = request.form["materia"]
+        materia = request.form["materia"]
         data_scadenza = request.form["scadenza"]
-        if not data_scadenza:
-            data_scadenza = get_data_scadenza(id_materia)
         #salvataggio di tutti i valori nel db
-        add_compiti(title, description, data_scadenza, id_materia) 
-        return redirect("/")
+        add_compiti(title, description, data_scadenza, materia) 
+        return redirect("/") 
 
 if __name__ == '__main__':
     app.run(debug=True)
